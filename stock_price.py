@@ -20,8 +20,7 @@ def postgre_connection():
     DBNAME = "bd-st-itba"
 
     # gets the credentials from .aws/credentials
-    #session = boto3.Session(profile_name='RDSCreds')
-    session = boto3.Session(profile_name='bd-st-itba')
+    session = boto3.Session(profile_name='RDSCreds')
     client = session.client('rds')
 
     token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
