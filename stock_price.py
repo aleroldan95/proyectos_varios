@@ -3,10 +3,36 @@ import datetime as dt
 import plotly.graph_objects as go
 import pandas as pd
 import streamlit as st
+import psycopg2
+import boto3
 
 # Start and End dates
 dt_start = dt.datetime(2019, 1,1)
 dt_end = dt.datetime.now() - dt.timedelta(days=1)
+
+def postgre_connection():
+
+    ENDPOINT = "db-test.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
+    USER = "postgres"
+    PORT = "5432"
+    REGION = "us-east-1a"
+    DBNAME = "bd-st-itba"
+
+    # gets the credentials from .aws/credentials
+    session = boto3.Session(profile_name='RDSCreds')
+    client = session.client('rds')
+
+    token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
+
+    try:
+        conn = psycopg2.connect(host=ENDPOINT, port=PORT, database=DBNAME, user=USER, password=token,
+                                sslrootcert="SSLCERTIFICATE")
+        cur = conn.cursor()
+        cur.execute("""SELECT now()""")
+        query_results = cur.fetchall()
+        st.markdown(query_results)
+    except Exception as e:
+        st.warning("Database connection failed due to {}".format(e))
 
 def create_graphic(stock, title):
     # Download historical Adjusted Closing prices of Apple stock
@@ -103,6 +129,7 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
                       'category':'Tecnológicas'},
               'JP':{'name':'JP Morgan',
                     'category':'Bancos'}}
+postgre_connection()
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
@@ -116,3 +143,5 @@ if filter:
         create_graphic(filter,filter)
     except:
         st.warning('El símbolo ingresado no existe')
+
+
