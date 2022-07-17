@@ -11,7 +11,8 @@ dt_start = dt.datetime(2019, 1,1)
 dt_end = dt.datetime.now() - dt.timedelta(days=1)
 
 def postgre_connection():
-
+    #sudo apt install python3-dev libpq-dev
+    #pip3 install psycopg2
     ENDPOINT = "db-test.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
     USER = "postgres"
     PORT = "5432"
@@ -19,7 +20,8 @@ def postgre_connection():
     DBNAME = "bd-st-itba"
 
     # gets the credentials from .aws/credentials
-    session = boto3.Session(profile_name='RDSCreds')
+    #session = boto3.Session(profile_name='RDSCreds')
+    session = boto3.Session(profile_name='bd-st-itba')
     client = session.client('rds')
 
     token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
