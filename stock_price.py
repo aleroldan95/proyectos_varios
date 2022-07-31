@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 import psycopg2
 import boto3
+import json
 
 # Start and End dates
 dt_start = dt.datetime(2019, 1,1)
@@ -46,7 +47,7 @@ def send_sms():
 
         region_name="us-east-1"
     )
-    client_sqs = boto3.client(
+    sqs_client = boto3.client(
         "sqs",
         aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
         aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
@@ -64,7 +65,12 @@ def send_sms():
     #    TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
     #    Message="Hello World! 2"
     #)
-    client_sqs.get_queue_by_name(QueueName='ST-SQS').send_message(MessageBody='world')
+    message = {"key": "value"}
+    response = sqs_client.send_message(
+        QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
+        MessageBody=json.dumps(message)
+    )
+    print(response)
     st.write('Enviado!')
 
 def send_email():
