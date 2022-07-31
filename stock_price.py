@@ -67,7 +67,7 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         region_name=region_name
     )
 
-    message = {"text": f"{text_input}"}
+    message = {"text": "holaaa"}
     sqs_client.send_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MessageBody=json.dumps(message)
