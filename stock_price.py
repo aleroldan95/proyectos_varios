@@ -20,6 +20,7 @@ def postgre_connection():
     REGION = "us-east-1"
     DBNAME = "bd-st"
 
+
     # gets the credentials from .aws/credentials
     #session = boto3.Session(profile_name='LabInstanceProfile')
     #client = session.client('rds')
@@ -38,22 +39,13 @@ def postgre_connection():
     except Exception as e:
         st.warning("Database connection failed due to {}".format(e))
 
-def send_sms():
+def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
     client_sns = boto3.client(
         "sns",
-        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
-        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
-        aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
-
-        region_name="us-east-1"
-    )
-    sqs_client = boto3.client(
-        "sqs",
-        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
-        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
-        aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
-
-        region_name="us-east-1"
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_session_token=aws_session_token,
+        region_name=region_name
     )
 
     # Send your sms message.
@@ -65,22 +57,30 @@ def send_sms():
     #    TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
     #    Message="Hello World! 2"
     #)
-    message = {"text": "test"}
-    response = sqs_client.send_message(
+
+def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input):
+    sqs_client = boto3.client(
+        "sqs",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_session_token=aws_session_token,
+        region_name=region_name
+    )
+
+    message = {"text": text_input}
+    sqs_client.send_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MessageBody=json.dumps(message)
     )
-    print(response)
     st.write('Enviado!')
 
-def receive_message():
+def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
     sqs_client = boto3.client(
         "sqs",
-        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
-        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
-        aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
-
-        region_name="us-east-1"
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_session_token=aws_session_token,
+        region_name=region_name
     )
 
     response = sqs_client.receive_message(
@@ -94,8 +94,18 @@ def receive_message():
     for message in response.get("Messages", []):
         message_body = message["Body"]
         st.write(f"Message body: {json.loads(message_body)}")
-        #st.write(f"Receipt Handle: {message['ReceiptHandle']}")
 
+def clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
+    sqs_client = boto3.client(
+        "sqs",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_session_token=aws_session_token,
+        region_name=region_name
+    )
+    sqs_client.purge_queue(
+        QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
+    )
 
 def send_email():
     ses_client = boto3.client(
@@ -226,17 +236,34 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
               'JP':{'name':'JP Morgan',
                     'category':'Bancos'}}
 
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+aws_access_key_id = "ASIATQEPZB7ZZBSPL5C2",
+aws_secret_access_key = "/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+aws_session_token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
+
+region_name = "us-east-1"
+
+
+
 if st.button('Test Connection'):
     postgre_connection()
 
-if st.button('Send SMS'):
-    send_sms()
+col1, col2 = st.columns(2)
+with col1:
+    text_input = st.text_input('Añadir Mensaje')
+if st.button('Add Message to Queu') and text_input:
+    add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
 
 if st.button('Send EMAIL'):
-    send_email()
+    send_email(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
 
 if st.button('Messages'):
-    receive_message()
+    receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+
+if st.button('Clean Queu'):
+    clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
