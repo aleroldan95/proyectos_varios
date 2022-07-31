@@ -52,6 +52,10 @@ def send_sms():
         PhoneNumber="+541157231165",
         Message="Hello World!"
     )
+    client.publish(
+        TopicArn='test',
+        Message="Hello World!"
+    )
     st.write('Enviado!')
 
 def send_email():
