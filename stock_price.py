@@ -65,13 +65,37 @@ def send_sms():
     #    TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
     #    Message="Hello World! 2"
     #)
-    message = {"key": "value"}
+    message = {"text": "test"}
     response = sqs_client.send_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MessageBody=json.dumps(message)
     )
     print(response)
     st.write('Enviado!')
+
+def receive_message():
+    sqs_client = boto3.client(
+        "sqs",
+        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
+        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+        aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
+
+        region_name="us-east-1"
+    )
+
+    response = sqs_client.receive_message(
+        QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
+        MaxNumberOfMessages=100,
+        WaitTimeSeconds=10,
+    )
+
+    print(f"Number of messages received: {len(response.get('Messages', []))}")
+
+    for message in response.get("Messages", []):
+        message_body = message["Body"]
+        st.write(f"Message body: {json.loads(message_body)}")
+        st.write(f"Receipt Handle: {message['ReceiptHandle']}")
+
 
 def send_email():
     ses_client = boto3.client(
@@ -210,6 +234,9 @@ if st.button('Send SMS'):
 
 if st.button('Send EMAIL'):
     send_email()
+
+if st.button('Messages'):
+    receive_message()
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
