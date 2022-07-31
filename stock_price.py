@@ -80,9 +80,9 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
                     Message=body['text']
                  )
 
-                st.write(f'Message: {body} - Sended')
+                st.write(f"Message: {body['text']} - Sended")
 
-                sqs_client.delete_messages(
+                sqs_client.delete_message(
                     QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
                     ReceiptHandle=message.receipt_handle)
 
@@ -106,6 +106,10 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         MessageBody=json.dumps(message)
     )
     with col2:
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
         st.markdown('')
         st.markdown('')
         st.write('Enviado!')
