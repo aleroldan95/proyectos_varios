@@ -49,7 +49,7 @@ def send_sms():
 
     # Send your sms message.
     client.publish(
-        PhoneNumber="+5457231165",
+        PhoneNumber="+541157231165",
         Message="Hello World!"
     )
     st.write('Enviado!')
