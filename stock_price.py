@@ -190,6 +190,9 @@ if st.button('Test Connection'):
 if st.button('Send SMS'):
     send_sms()
 
+if st.button('Send EMAIL'):
+    send_email()
+
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
 
