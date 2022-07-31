@@ -73,7 +73,7 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
         st.write(len(response.get('Messages', [])) )
         if len(response.get('Messages', [])) > 0:
             for message in response.get("Messages", []):
-                body = json.loads(message.body)
+                body = json.loads(message["Body"])
 
                 client_sns.publish(
                     PhoneNumber="+541157231165",
@@ -106,6 +106,8 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         MessageBody=json.dumps(message)
     )
     with col2:
+        st.markdown('')
+        st.markdown('')
         st.write('Enviado!')
 
 def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
