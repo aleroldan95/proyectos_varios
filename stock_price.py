@@ -22,12 +22,7 @@ def postgre_connection():
     # gets the credentials from .aws/credentials
     #session = boto3.Session(profile_name='LabInstanceProfile')
     #client = session.client('rds')
-    #client = boto3.client(
-    #    "rds",
-    #    aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
-    #    aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
-    #    region_name="us-east-1"
-    #)
+
 
     #token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
     token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw=='
@@ -58,6 +53,40 @@ def send_sms():
         Message="Hello World!"
     )
     st.write('Enviado!')
+
+def send_email():
+    def send_plain_email():
+        ses_client = boto3.client(
+            "ses",
+            aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
+            aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+            aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
+
+            region_name="us-east-1"
+        )
+        CHARSET = "UTF-8"
+
+        response = ses_client.send_email(
+            Destination={
+                "ToAddresses": [
+                    "alejandro.d.roldan@gmail.com",
+                ],
+            },
+            Message={
+                "Body": {
+                    "Text": {
+                        "Charset": CHARSET,
+                        "Data": "Hello, world!",
+                    }
+                },
+                "Subject": {
+                    "Charset": CHARSET,
+                    "Data": "Amazing Email Tutorial",
+                },
+            },
+            Source="abhishek@learnaws.org",
+        )
+        st.write('Enviado!')
 
 def create_graphic(stock, title):
     # Download historical Adjusted Closing prices of Apple stock
