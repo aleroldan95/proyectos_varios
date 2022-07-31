@@ -54,9 +54,10 @@ def send_sms():
 
     # Send your sms message.
     client.publish(
-        PhoneNumber="+1557231165",
+        PhoneNumber="+541157231165",
         Message="Hello World!"
     )
+    st.write('Enviado!')
 
 def create_graphic(stock, title):
     # Download historical Adjusted Closing prices of Apple stock
