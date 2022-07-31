@@ -67,7 +67,7 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         region_name=region_name
     )
 
-    message = {"text": "holaaa"}
+    message = {"text": f"{text_input}"}
     sqs_client.send_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MessageBody=json.dumps(message)
@@ -254,7 +254,7 @@ col1, col2 = st.columns(2)
 with col1:
     text_input = st.text_input('Añadir Mensaje')
 with col2:
-    if st.button('Add Message to Queu') and text_input != "":
+    if st.button('Add Message to Queu'):
         add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
 
 if st.button('Send EMAIL'):
