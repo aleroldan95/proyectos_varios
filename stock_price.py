@@ -60,14 +60,15 @@ def send_sms():
     #    PhoneNumber="+541157231165",
     #    Message="Hello World!"
     #)
-    client_sns.publish(
-        TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
-        Message="Hello World! 2"
-    )
+    #client_sns.publish(
+    #    TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
+    #    Message="Hello World! 2"
+    #)
     client_sqs.publish(
         TopicArn='arn:aws:sqs:us-east-1:240819703795:ST-SQS',
         Message="Hello World! 3"
     )
+    client_sqs.get_queue_by_name(QueueName='ST-SQS').send_message(MessageBody='world')
     st.write('Enviado!')
 
 def send_email():
