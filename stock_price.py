@@ -72,7 +72,10 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
         )
         st.write(len(response.get('Messages', [])) )
         if len(response.get('Messages', [])) > 0:
+
+            print(response)
             for message in response.get("Messages", []):
+                print(message)
                 body = json.loads(message["Body"])
 
                 client_sns.publish(
