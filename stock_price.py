@@ -42,6 +42,20 @@ def postgre_connection():
     except Exception as e:
         st.warning("Database connection failed due to {}".format(e))
 
+def send_sms():
+    client = boto3.client(
+        "sns",
+        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
+        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+        region_name="us-east-1"
+    )
+
+    # Send your sms message.
+    client.publish(
+        PhoneNumber="+1557231165",
+        Message="Hello World!"
+    )
+
 def create_graphic(stock, title):
     # Download historical Adjusted Closing prices of Apple stock
     df = DataReader(stock, 'yahoo', dt_start, dt_end)  # ['Adj Close']
@@ -140,6 +154,9 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
 
 if st.button('Test Connection'):
     postgre_connection()
+
+if st.button('Send SMS'):
+    send_sms()
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
