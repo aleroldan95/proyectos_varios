@@ -13,11 +13,11 @@ dt_end = dt.datetime.now() - dt.timedelta(days=1)
 def postgre_connection():
     #sudo apt install python3-dev libpq-dev
     #pip3 install psycopg2
-    ENDPOINT = "bd-st-itba.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
+    ENDPOINT = "db-st.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
     USER = "postgres"
     PORT = "5432"
     REGION = "us-east-1"
-    DBNAME = "bd-st-itba"
+    DBNAME = "bd-st"
 
     # gets the credentials from .aws/credentials
     #session = boto3.Session(profile_name='LabInstanceProfile')
