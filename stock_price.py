@@ -53,8 +53,12 @@ def send_sms():
     #    Message="Hello World!"
     #)
     client.publish(
-        TopicArn='arn:aws:sns:us-east-1:240819703795:test',
+        TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
         Message="Hello World! 2"
+    )
+    client.publish(
+        TopicArn='arn:aws:sqs:us-east-1:240819703795:ST-SQS',
+        Message="Hello World! 3"
     )
     st.write('Enviado!')
 
