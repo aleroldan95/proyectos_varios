@@ -89,12 +89,12 @@ def receive_message():
         WaitTimeSeconds=10,
     )
 
-    print(f"Number of messages received: {len(response.get('Messages', []))}")
+    st.write(f"Number of messages received: {len(response.get('Messages', []))}")
 
     for message in response.get("Messages", []):
         message_body = message["Body"]
         st.write(f"Message body: {json.loads(message_body)}")
-        st.write(f"Receipt Handle: {message['ReceiptHandle']}")
+        #st.write(f"Receipt Handle: {message['ReceiptHandle']}")
 
 
 def send_email():
