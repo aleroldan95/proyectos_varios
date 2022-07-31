@@ -20,7 +20,7 @@ def postgre_connection():
     DBNAME = "bd-st-itba"
 
     # gets the credentials from .aws/credentials
-    session = boto3.Session(profile_name='default')
+    session = boto3.Session(profile_name='RDSCreds')
     client = session.client('rds')
 
     token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
@@ -130,6 +130,7 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
                       'category':'Tecnológicas'},
               'JP':{'name':'JP Morgan',
                     'category':'Bancos'}}
+
 postgre_connection()
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
