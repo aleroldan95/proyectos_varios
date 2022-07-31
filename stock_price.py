@@ -239,9 +239,9 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-aws_access_key_id = "ASIATQEPZB7ZZBSPL5C2",
-aws_secret_access_key = "/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
-aws_session_token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
+aws_access_key_id = "ASIATQEPZB7ZZBSPL5C2"
+aws_secret_access_key = "/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A"
+aws_session_token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw=='
 
 region_name = "us-east-1"
 
