@@ -85,7 +85,7 @@ def receive_message():
 
     response = sqs_client.receive_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
-        MaxNumberOfMessages=100,
+        MaxNumberOfMessages=10,
         WaitTimeSeconds=10,
     )
 
