@@ -13,7 +13,7 @@ dt_end = dt.datetime.now() - dt.timedelta(days=1)
 def postgre_connection():
     #sudo apt install python3-dev libpq-dev
     #pip3 install psycopg2
-    ENDPOINT = "db-test.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
+    ENDPOINT = "bd-st-itba.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
     USER = "postgres"
     PORT = "5432"
     REGION = "us-east-1"
