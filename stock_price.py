@@ -73,7 +73,6 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
         st.write(len(response.get('Messages', [])) )
         if len(response.get('Messages', [])) > 0:
 
-            print(response)
             for message in response.get("Messages", []):
                 print(message)
                 body = json.loads(message["Body"])
@@ -87,7 +86,7 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
 
                 sqs_client.delete_message(
                     QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
-                    ReceiptHandle=message.receipt_handle)
+                    ReceiptHandle=message['ReceiptHandle'])
 
         else:
             break
