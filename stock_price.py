@@ -16,15 +16,21 @@ def postgre_connection():
     ENDPOINT = "db-test.cqwrfgluw2ec.us-east-1.rds.amazonaws.com"
     USER = "postgres"
     PORT = "5432"
-    REGION = "us-east-1a"
+    REGION = "us-east-1"
     DBNAME = "bd-st-itba"
 
     # gets the credentials from .aws/credentials
     #session = boto3.Session(profile_name='LabInstanceProfile')
     #client = session.client('rds')
+    #client = boto3.client(
+    #    "rds",
+    #    aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
+    #    aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+    #    region_name="us-east-1"
+    #)
 
     #token = client.generate_db_auth_token(DBHostname=ENDPOINT, Port=PORT, DBUsername=USER, Region=REGION)
-    token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==us-east-1'
+    token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw=='
 
     try:
         conn = psycopg2.connect(host=ENDPOINT, port=PORT, database=DBNAME, user=USER, password=token,
