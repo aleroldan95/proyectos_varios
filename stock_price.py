@@ -70,14 +70,17 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
             MaxNumberOfMessages=1,
             WaitTimeSeconds=5,
         )
+        st.write(len(response.get('Messages', [])) )
         if len(response.get('Messages', [])) > 0:
             for message in response.get("Messages", []):
                 body = json.loads(message.body)
 
                 client_sns.publish(
                     PhoneNumber="+541157231165",
-                    Message=body
+                    Message=body['text']
                  )
+
+                st.write(f'Message: {body} - Sended')
 
                 sqs_client.delete_messages(
                     QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
@@ -88,7 +91,7 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
 
 
 
-def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input):
+def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input, col2):
     sqs_client = boto3.client(
         "sqs",
         aws_access_key_id=aws_access_key_id,
@@ -102,7 +105,8 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MessageBody=json.dumps(message)
     )
-    st.write('Enviado!')
+    with col2:
+        st.write('Enviado!')
 
 def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
     sqs_client = boto3.client(
@@ -136,6 +140,8 @@ def clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, 
     sqs_client.purge_queue(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
     )
+
+    st.write('All Cleaned!')
 
 def send_email():
     ses_client = boto3.client(
@@ -283,10 +289,9 @@ if st.button('Test Connection'):
 col1, col2 = st.columns(2)
 with col1:
     text_input = st.text_input('Añadir Mensaje')
-with col2:
-    st.text_input("")
     if st.button('Add Message to Queu'):
-        add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
+        add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input, col2)
+
 
 #if st.button('Send EMAIL'):
 #    send_email(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
