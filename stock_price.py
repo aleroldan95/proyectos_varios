@@ -48,13 +48,13 @@ def send_sms():
     )
 
     # Send your sms message.
+    #client.publish(
+    #    PhoneNumber="+541157231165",
+    #    Message="Hello World!"
+    #)
     client.publish(
-        PhoneNumber="+541157231165",
-        Message="Hello World!"
-    )
-    client.publish(
-        TopicArn='test',
-        Message="Hello World!"
+        TopicArn=client.list_topics()['Topics']['TopicArn'],
+        Message="Hello World! 2"
     )
     st.write('Enviado!')
 
