@@ -39,21 +39,8 @@ def postgre_connection():
     except Exception as e:
         st.warning("Database connection failed due to {}".format(e))
 
-def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
-    client_sns = boto3.client(
-        "sns",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_session_token=aws_session_token,
-        region_name=region_name
-    )
-    sqs_client = boto3.client(
-        "sqs",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_session_token=aws_session_token,
-        region_name=region_name
-    )
+def send_sms(client_sns):
+
 
     # Send your sms message.
     #client_sns.publish(
@@ -70,11 +57,9 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
             MaxNumberOfMessages=1,
             WaitTimeSeconds=5,
         )
-        st.write(len(response.get('Messages', [])) )
         if len(response.get('Messages', [])) > 0:
 
             for message in response.get("Messages", []):
-                print(message)
                 body = json.loads(message["Body"])
 
                 client_sns.publish(
@@ -93,14 +78,7 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
 
 
 
-def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input, col2):
-    sqs_client = boto3.client(
-        "sqs",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_session_token=aws_session_token,
-        region_name=region_name
-    )
+def add_sqs(sqs_client, text_input, col2):
 
     message = {"text": f"{text_input}"}
     sqs_client.send_message(
@@ -116,14 +94,7 @@ def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_
         st.markdown('')
         st.write('Enviado!')
 
-def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
-    sqs_client = boto3.client(
-        "sqs",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_session_token=aws_session_token,
-        region_name=region_name
-    )
+def receive_message(sqs_client):
 
     response = sqs_client.receive_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
@@ -137,14 +108,8 @@ def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token,
         message_body = message["Body"]
         st.write(f"Message body: {json.loads(message_body)}")
 
-def clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name):
-    sqs_client = boto3.client(
-        "sqs",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_session_token=aws_session_token,
-        region_name=region_name
-    )
+def clean_messages(sqs_client):
+
     sqs_client.purge_queue(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
     )
@@ -281,7 +246,7 @@ stock_dict = {'MELI':{'name':'Mercado Libre',
                     'category':'Bancos'}}
 
 
-#-----------------------------------------------------------------------------------------------------------------------
+#VARIALBES-----------------------------------------------------------------------------------------------------------------------
 
 aws_access_key_id = "ASIATQEPZB7ZZBSPL5C2"
 aws_secret_access_key = "/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A"
@@ -289,7 +254,21 @@ aws_session_token = 'FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es
 
 region_name = "us-east-1"
 
-
+client_sns = boto3.client(
+    "sns",
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    aws_session_token=aws_session_token,
+    region_name=region_name
+)
+sqs_client = boto3.client(
+    "sqs",
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    aws_session_token=aws_session_token,
+    region_name=region_name
+)
+#SNS----------------------
 
 if st.button('Test Connection'):
     postgre_connection()
@@ -298,7 +277,7 @@ col1, col2 = st.columns(2)
 with col1:
     text_input = st.text_input('Añadir Mensaje')
     if st.button('Add Message to Queu'):
-        add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input, col2)
+        add_sqs(sqs_client, text_input, col2)
 
 
 #if st.button('Send EMAIL'):
@@ -308,15 +287,18 @@ with col1:
 col1, col2, col3 = st.columns(3)
 with col1:
     if st.button('Messages'):
-        receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+        receive_message(sqs_client)
 
 with col2:
     if st.button('Send SMS'):
-        send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+        send_sms(client_sns)
 
 with col3:
     if st.button('Clean Queu'):
-        clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+        clean_messages(sqs_client)
+
+
+#STOCKS------------------------------
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
