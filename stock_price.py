@@ -38,8 +38,16 @@ def postgre_connection():
         st.warning("Database connection failed due to {}".format(e))
 
 def send_sms():
-    client = boto3.client(
+    client_sns = boto3.client(
         "sns",
+        aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
+        aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
+        aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
+
+        region_name="us-east-1"
+    )
+    client_sqs = boto3.client(
+        "sqs",
         aws_access_key_id="ASIATQEPZB7ZZBSPL5C2",
         aws_secret_access_key="/BdXokboPveLCjuuYZvTK7skTQAUsyeEvIlFWQ9A",
         aws_session_token='FwoGZXIvYXdzEAAaDI8vDFzWyYAu+/8jLyLNAURfxCc9rBzK85sjOIgB9es+0MPhtPEoSGDrpTLcn7LmPcWNAXISqmjoPyCTR9AIrr4+xrmeIFaHexpImUdUqEhUQqBbPPQvzLQBzjH0IB/fi6oULmaB4XHAkbKqH5R4bSrtwgtmCPstBHpdu9H7kQLoA1VqEinmDzLPPhCHJuLFww2Ozz2ZtRDxJAfD/sfLSbzY5NnEpyaMoUuQf6isQ22XyeVo8fjYWuvIxin2eGBq8Vwnm9VwtEOWumJtri/hGjqwlypOfQW1xKDYnGIojZmalwYyLWFSS1bJMj2jyNT7fDZvs3vuM/kqSvCSGlBZPEe83JLXZrwNR550DEncnp+JOw==',
@@ -52,11 +60,11 @@ def send_sms():
     #    PhoneNumber="+541157231165",
     #    Message="Hello World!"
     #)
-    client.publish(
+    client_sns.publish(
         TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
         Message="Hello World! 2"
     )
-    client.publish(
+    client_sqs.publish(
         TopicArn='arn:aws:sqs:us-east-1:240819703795:ST-SQS',
         Message="Hello World! 3"
     )
