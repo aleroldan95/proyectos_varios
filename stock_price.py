@@ -253,8 +253,9 @@ if st.button('Test Connection'):
 col1, col2 = st.columns(2)
 with col1:
     text_input = st.text_input('Añadir Mensaje')
-if st.button('Add Message to Queu') and text_input:
-    add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
+with col2:
+    if st.button('Add Message to Queu') and text_input != "":
+        add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
 
 if st.button('Send EMAIL'):
     send_email(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
