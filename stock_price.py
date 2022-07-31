@@ -47,9 +47,16 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
         aws_session_token=aws_session_token,
         region_name=region_name
     )
+    sqs_client = boto3.client(
+        "sqs",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_session_token=aws_session_token,
+        region_name=region_name
+    )
 
     # Send your sms message.
-    #client.publish(
+    #client_sns.publish(
     #    PhoneNumber="+541157231165",
     #    Message="Hello World!"
     #)
@@ -57,6 +64,29 @@ def send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region
     #    TopicArn='arn:aws:sns:us-east-1:240819703795:st-msm',
     #    Message="Hello World! 2"
     #)
+    while True:
+        response = sqs_client.receive_message(
+            QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=5,
+        )
+        if len(response.get('Messages', [])) > 0:
+            for message in response.get("Messages", []):
+                body = json.loads(message.body)
+
+                client_sns.publish(
+                    PhoneNumber="+541157231165",
+                    Message=body
+                 )
+
+                sqs_client.delete_messages(
+                    QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
+                    ReceiptHandle=message.receipt_handle)
+
+        else:
+            break
+
+
 
 def add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input):
     sqs_client = boto3.client(
@@ -86,7 +116,7 @@ def receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token,
     response = sqs_client.receive_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/240819703795/ST-SQS",
         MaxNumberOfMessages=10,
-        WaitTimeSeconds=10,
+        WaitTimeSeconds=5,
     )
 
     st.write(f"Number of messages received: {len(response.get('Messages', []))}")
@@ -254,17 +284,26 @@ col1, col2 = st.columns(2)
 with col1:
     text_input = st.text_input('Añadir Mensaje')
 with col2:
+    st.text_input("")
     if st.button('Add Message to Queu'):
         add_sqs(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name, text_input)
 
-if st.button('Send EMAIL'):
-    send_email(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+#if st.button('Send EMAIL'):
+#    send_email(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
 
-if st.button('Messages'):
-    receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
 
-if st.button('Clean Queu'):
-    clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button('Messages'):
+        receive_message(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+
+with col2:
+    if st.button('Send SMS'):
+        send_sms(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
+
+with col3:
+    if st.button('Clean Queu'):
+        clean_messages(aws_access_key_id, aws_secret_access_key, aws_session_token, region_name)
 
 categories = ['E-commerces', 'Tecnológicas', 'Bancos', 'Otros']
 st_categories = {cat:st.sidebar.checkbox(f'{cat}', False) for cat in categories}
